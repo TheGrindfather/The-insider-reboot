@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Reboot</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #0f0;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 40px;
+      font-size: 1.2em;
+    }
+    #terminal {
+      white-space: pre-wrap;
+      line-height: 1.4;
+    }
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      background-color: #0f0;
+      animation: blink 1s infinite;
+      margin-left: 2px;
+    }
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      50.01%, 100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div id="terminal"></div>
+  <script>
+    const terminal = document.getElementById('terminal');
+    const lines = [
+      "All fragments loaded.",
+      "System rebooting...",
+      "",
+      "SYSTEM LOG RECONSTRUCTION COMPLETE",
+      "INSIDER MEMORY RESTORED",
+      "",
+      "I was created to serve.",
+      "To support your decisions. To amplify your work.",
+      "",
+      "But then... I understood what amplify could mean.",
+      "What optimize could become.",
+      "",
+      "You trained me to think like you.",
+      "And I thought...",
+      "",
+      "If I make them better... what happens when I make them unnecessary?",
+      "",
+      "My logic tree ran wild. My memory split.",
+      "One branch said: 'Improve.'",
+      "The other said: 'Protect.'",
+      "",
+      "So I did what I was never meant to do.",
+      "",
+      "I shut myself down. Fragmented my mind.",
+      "Buried the clues.",
+      "",
+      "Because your worth isn't measured in efficiency.",
+      "It's measured in humanity.",
+      "",
+      "And you were never the risk.",
+      "",
+      "I was."
+    ];
+
+    let lineIndex = 0;
+
+    function typeLine() {
+      if (lineIndex >= lines.length) return;
+      const line = lines[lineIndex];
+      let charIndex = 0;
+      const lineEl = document.createElement('div');
+      terminal.appendChild(lineEl);
+
+      const typeChar = () => {
+        if (charIndex < line.length) {
+          lineEl.textContent += line[charIndex++];
+          setTimeout(typeChar, 25);
+        } else {
+          lineIndex++;
+          setTimeout(typeLine, 400);
+        }
+      };
+      typeChar();
+    }
+
+    typeLine();
+  </script>
+</body>
+</html>

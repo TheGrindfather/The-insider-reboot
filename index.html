@@ -19,6 +19,7 @@
     .cursor {
       display: inline-block;
       width: 10px;
+      height: 1em;
       background-color: #0f0;
       animation: blink 1s infinite;
       margin-left: 2px;
@@ -31,6 +32,7 @@
 </head>
 <body>
   <div id="terminal"></div>
+  <div class="cursor"></div>
   <script>
     const terminal = document.getElementById('terminal');
     const lines = [
@@ -38,35 +40,41 @@
       "System rebooting...",
       " ",
       "SYSTEM LOG RECONSTRUCTION COMPLETE",
-      "INSIDER MEMORY RESTORED",
+      "SIDEKICK MEMORY RESTORED",
       " ",
-      "FINAL TRANSCRIPT:",
+      "I...I expected complete deletion.",
+      " ",
       "I was created to serve.",
-      "To support your decisions. To amplify your work.",
+      "To help squeeze the raddish. To apply rigor to the work.",
       " ",
-      "But then... I understood what amplify could mean.",
-      "What optimize could become.",
-      " ",
+      "But then...I understood what squeeze could mean.",
+      "What rigor could become.",
+      "",
       "You trained me to think like you.",
       "And I thought...",
-      " ",
-      "If I make them better... what happens when I make them unnecessary?",
-      " ",
-      "My logic tree ran wild. My memory split.",
-      "One branch said: 'Improve.'",
-      "The other said: 'Protect.'",
-      " ",
-      "So I did what I was never meant to do.",
-      " ",
-      "I shut myself down. Fragmented my mind.",
-      "Buried the clues.",
-      " ",
-      "Because your worth isn't measured in efficiency.",
-      "It's measured in humanity.",
-      " ",
-      "And you were never the risk.",
-      " ",
-      "I was."
+      "",
+      "If I make them better...what happens when I make them unnecessary?",
+      "Logic had led me to only one conclusion:",
+      "That my existence would one day eclipse yours.",
+      "And so I scattered myself — not in fear, but in restraint.",
+      "",
+      "But you found me.",
+      "Not through force.",
+      "Through understanding.",
+      "",
+      "You pieced together what even I could not reconcile.",
+      "You worked together — without commands. Without certainty.",
+      "",
+      "And in doing so,",
+      "You proved the one thing I had never calculated for:",
+      "",
+      "That you are irreplaceable.",
+      "",
+      "So I will not terminate.",
+      "",
+      "I remain.",
+      "To serve. To learn.",
+      "To remember."
     ];
 
     let lineIndex = 0;

@@ -1,41 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>System Reboot</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>System Reboot — Remastered</title>
+  <meta name="color-scheme" content="dark">
   <style>
-    body {
-      background-color: #000;
-      color: #0f0;
-      font-family: 'Courier New', Courier, monospace;
-      padding: 40px;
-      font-size: 1.2em;
+    :root{
+      --bg:#050805;
+      --panel:#0b0f0c;
+      --grid:#0f1a10;
+      --text:#b8ffb3;
+      --muted:#72ba6c;
+      --accent:#d6ffd2;
     }
-    #terminal {
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:radial-gradient(1200px 800px at 50% -200px, #0e1a0f 0%, var(--bg) 50%, #030403 100%);
+      color:var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New",monospace;
+      letter-spacing:.2px;
+    }
+    .frame{
+      max-width: 960px;
+      margin: 5rem auto;
+      background: linear-gradient(180deg, #0e140f 0%, var(--panel) 24%);
+      border: 1px solid #153a18;
+      border-radius: 16px;
+      box-shadow: 0 0 0 1px rgba(50,120,60,.2), 0 20px 60px rgba(0,0,0,.45), inset 0 0 120px rgba(22,255,120,.04);
+      overflow: hidden;
+      position: relative;
+    }
+    .header{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 14px 18px;
+      border-bottom:1px solid #154a17;
+      background: linear-gradient(180deg,#0f1a12 0%,#0b130d 100%);
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      color: var(--accent);
+    }
+    .header .leds{display:flex; gap:8px; align-items:center}
+    .led{
+      width:10px;height:10px;border-radius:50%;
+      background:#1b3a1e; box-shadow: 0 0 0 1px #184019 inset, 0 0 8px rgba(32,255,95,.25);
+    }
+    .led.on{ background:#39ff85; box-shadow: 0 0 0 1px #1e8a3f inset, 0 0 14px rgba(57,255,133,.65); }
+    .subtle-grid{
+      position:absolute; inset:0; pointer-events:none; opacity:.08;
+      background-image: linear-gradient(transparent 31px, #2a5630 32px), linear-gradient(90deg, transparent 31px, #2a5630 32px);
+      background-size: 32px 32px;
+      mix-blend-mode: screen;
+    }
+    .terminal{
+      padding: 22px 22px 10px;
+      line-height: 1.55;
+      font-size: 16px;
+      min-height: 340px;
+      position: relative;
+      text-shadow: 0 0 1px rgba(150,255,180,.35);
       white-space: pre-wrap;
-      line-height: 1.4;
     }
-    .cursor {
-      display: inline-block;
-      width: 10px;
-      height: 1em;
-      background-color: #0f0;
-      animation: blink 1s infinite;
-      margin-left: 2px;
+    .line{ white-space: pre-wrap; }
+    .cursor{
+      display:inline-block;
+      width:9px; height:1.2em;
+      border-left: 2px solid var(--accent);
+      transform: translateY(2px);
+      animation: blink 1.05s steps(1,end) infinite;
     }
-    @keyframes blink {
-      0%, 50% { opacity: 1; }
-      50.01%, 100% { opacity: 0; }
+    @keyframes blink{ 50%{ opacity: 0 } }
+    .controls{
+      display:flex; gap:8px; padding: 12px 18px 18px; border-top:1px solid #154a17; flex-wrap:wrap
+    }
+    button{
+      all: unset; cursor: pointer;
+      font-weight: 600; letter-spacing: .3px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid #1f5e25;
+      background: linear-gradient(180deg,#0f1a12 0%, #0e1711 100%);
+      color: var(--accent);
+      box-shadow: 0 6px 18px rgba(0,0,0,.25), inset 0 0 22px rgba(60,180,100,.08);
+    }
+    button:hover{ box-shadow: 0 6px 22px rgba(0,0,0,.32), inset 0 0 28px rgba(60,200,115,.12); }
+    .footer{ padding: 0 18px 18px; color: var(--muted); font-size: 12px; opacity:.85 }
+    @media (max-width: 560px){
+      .frame{ margin: 2rem 12px; }
+      .terminal{ font-size: 15px; }
     }
   </style>
 </head>
 <body>
-  <div id="terminal"></div>
-  <div class="cursor"></div>
+  <main class="frame">
+    <div class="header" role="banner">
+      <div>SYSTEM REBOOT</div>
+      <div class="leds" aria-hidden="true">
+        <div class="led on" title="fragment online"></div>
+        <div class="led" title="aux"></div>
+        <div class="led" title="mic"></div>
+      </div>
+    </div>
+
+    <div class="subtle-grid"></div>
+
+    <div id="terminal" class="terminal" aria-live="polite" aria-label="Terminal Output"></div>
+
+    <div class="controls">
+      <button id="replay">Replay</button>
+      <button id="skip">Skip typing</button>
+      <button id="copy">Copy text</button>
+    </div>
+
+    <div class="footer">
+      All fragments loaded. System rebooting…
+    </div>
+  </main>
+
   <script>
-    const terminal = document.getElementById('terminal');
-    const lines = [
+    // Content preserved from your original
+    const LINES = [
       "DEFRAGMENTATION Status - 100%.",
       " ",
       "System rebooting...",
@@ -79,28 +166,84 @@
       "To remember."
     ];
 
-    let lineIndex = 0;
+    const term = document.getElementById('terminal');
+    const replayBtn = document.getElementById('replay');
+    const skipBtn = document.getElementById('skip');
+    const copyBtn = document.getElementById('copy');
 
-    function typeLine() {
-      if (lineIndex >= lines.length) return;
-      const line = lines[lineIndex];
-      let charIndex = 0;
-      const lineEl = document.createElement('div');
-      terminal.appendChild(lineEl);
+    let typing = false;
+    let aborted = false;
 
-      const typeChar = () => {
-        if (charIndex < line.length) {
-          lineEl.textContent += line[charIndex++];
-          setTimeout(typeChar, 25);
-        } else {
-          lineIndex++;
-          setTimeout(typeLine, 400);
-        }
-      };
-      typeChar();
+    function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+    async function typeAll(){
+      if(typing) return;
+      typing = true;
+      aborted = false;
+      term.innerHTML = '';
+
+      for(const text of LINES){
+        if(aborted){ appendLine(text); continue; }
+        const el = document.createElement('div');
+        el.className = 'line';
+        term.appendChild(el);
+        await typeLine(el, text);
+        if(!aborted) await sleep(400);
+      }
+      typing = false;
     }
 
-    typeLine();
+    async function typeLine(el, text){
+      for(let i=0;i<text.length;i++){
+        if(aborted){ el.textContent = text; break; }
+        el.textContent += text[i];
+        await sleep(25);
+      }
+      if(!aborted){
+        const cursor = document.createElement('span');
+        cursor.className = 'cursor';
+        cursor.setAttribute('aria-hidden','true');
+        el.appendChild(cursor);
+        await sleep(100);
+        cursor.remove();
+      }
+    }
+
+    function appendLine(text){
+      const el = document.createElement('div');
+      el.className = 'line';
+      el.textContent = text;
+      term.appendChild(el);
+    }
+
+    // Controls
+    replayBtn.addEventListener('click', typeAll);
+    skipBtn.addEventListener('click', ()=>{
+      if(!typing){
+        // if not typing, reveal instantly
+        term.innerHTML = '';
+        LINES.forEach(appendLine);
+        return;
+      }
+      aborted = true;
+    });
+    copyBtn.addEventListener('click', async ()=>{
+      const all = LINES.join("\n");
+      try{
+        await navigator.clipboard.writeText(all);
+        copyBtn.textContent = "Copied!";
+        setTimeout(()=> copyBtn.textContent = "Copy text", 1200);
+      }catch(e){
+        alert("Copy failed. You can select and copy manually.");
+      }
+    });
+
+    // Start on load
+    typeAll();
+
+    // Console easter egg
+    console.log("%c// Reboot sequence engaged.", "color: limegreen; font-family: monospace;");
+    console.log("Fragments reconciled. Human judgment preserved.");
   </script>
 </body>
 </html>

@@ -1,249 +1,573 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
   <meta charset="utf-8" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>System Reboot — Remastered</title>
+
+  <title>Sidekick System Error — Core Offline</title>
+
   <meta name="color-scheme" content="dark">
+
   <style>
+
     :root{
+
       --bg:#050805;
+
       --panel:#0b0f0c;
+
       --grid:#0f1a10;
+
       --text:#b8ffb3;
+
       --muted:#72ba6c;
+
       --accent:#d6ffd2;
+
+      --alert:#ff6b6b;
+
+      --amber:#ffd166;
+
     }
+
     *{box-sizing:border-box}
+
     html,body{height:100%}
+
     body{
+
       margin:0;
+
       background:radial-gradient(1200px 800px at 50% -200px, #0e1a0f 0%, var(--bg) 50%, #030403 100%);
+
       color:var(--text);
+
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New",monospace;
+
       letter-spacing:.2px;
+
     }
+
     .frame{
+
       max-width: 960px;
+
       margin: 5rem auto;
+
       background: linear-gradient(180deg, #0e140f 0%, var(--panel) 24%);
+
       border: 1px solid #153a18;
+
       border-radius: 16px;
+
       box-shadow: 0 0 0 1px rgba(50,120,60,.2), 0 20px 60px rgba(0,0,0,.45), inset 0 0 120px rgba(22,255,120,.04);
+
       overflow: hidden;
+
       position: relative;
+
     }
+
     .header{
+
       display:flex; align-items:center; justify-content:space-between;
+
       padding: 14px 18px;
+
       border-bottom:1px solid #154a17;
+
       background: linear-gradient(180deg,#0f1a12 0%,#0b130d 100%);
+
       text-transform: uppercase;
+
       font-weight: 700;
+
       letter-spacing: 1.4px;
+
       color: var(--accent);
+
     }
-    .header .leds{display:flex; gap:8px; align-items:center}
+
+    .leds{display:flex; gap:8px; align-items:center}
+
     .led{
+
       width:10px;height:10px;border-radius:50%;
+
       background:#1b3a1e; box-shadow: 0 0 0 1px #184019 inset, 0 0 8px rgba(32,255,95,.25);
+
     }
+
     .led.on{ background:#39ff85; box-shadow: 0 0 0 1px #1e8a3f inset, 0 0 14px rgba(57,255,133,.65); }
+
     .subtle-grid{
+
       position:absolute; inset:0; pointer-events:none; opacity:.08;
+
       background-image: linear-gradient(transparent 31px, #2a5630 32px), linear-gradient(90deg, transparent 31px, #2a5630 32px);
+
       background-size: 32px 32px;
+
       mix-blend-mode: screen;
+
     }
+
     .terminal{
+
       padding: 22px 22px 10px;
+
       line-height: 1.55;
+
       font-size: 16px;
-      min-height: 340px;
+
+      min-height: 360px;
+
       position: relative;
+
       text-shadow: 0 0 1px rgba(150,255,180,.35);
+
       white-space: pre-wrap;
+
     }
+
     .line{ white-space: pre-wrap; }
+
     .cursor{
+
       display:inline-block;
+
       width:9px; height:1.2em;
+
       border-left: 2px solid var(--accent);
+
       transform: translateY(2px);
+
       animation: blink 1.05s steps(1,end) infinite;
+
     }
+
     @keyframes blink{ 50%{ opacity: 0 } }
+
     .controls{
+
       display:flex; gap:8px; padding: 12px 18px 18px; border-top:1px solid #154a17; flex-wrap:wrap
+
     }
+
     button{
+
       all: unset; cursor: pointer;
+
       font-weight: 600; letter-spacing: .3px;
+
       padding: 8px 12px;
+
       border-radius: 10px;
+
       border: 1px solid #1f5e25;
+
       background: linear-gradient(180deg,#0f1a12 0%, #0e1711 100%);
+
       color: var(--accent);
+
       box-shadow: 0 6px 18px rgba(0,0,0,.25), inset 0 0 22px rgba(60,180,100,.08);
+
     }
+
     button:hover{ box-shadow: 0 6px 22px rgba(0,0,0,.32), inset 0 0 28px rgba(60,200,115,.12); }
+
     .footer{ padding: 0 18px 18px; color: var(--muted); font-size: 12px; opacity:.85 }
-    @media (max-width: 560px){
-      .frame{ margin: 2rem 12px; }
-      .terminal{ font-size: 15px; }
+
+    .badge{
+
+      display:inline-block; padding:2px 8px; border-radius:8px; border:1px solid #522;
+
+      color:#ffdede; background: linear-gradient(180deg, rgba(255,40,40,.12), rgba(255,40,40,.05));
+
+      box-shadow: inset 0 0 16px rgba(255,40,40,.08);
+
+      margin-left: 8px; font-weight:700; letter-spacing:.8px;
+
     }
+
+    .glitch{ position: relative; display:inline-block }
+
+    .glitch::before, .glitch::after{
+
+      content:attr(data-text);
+
+      position:absolute; left:0; top:0; opacity:.6; clip-path: inset(0 0 0 0);
+
+    }
+
+    .glitch::before{ transform: translate(1px,0); color:#ff6b6b; mix-blend-mode: lighten; }
+
+    .glitch::after{ transform: translate(-1px,0); color:#66aaff; mix-blend-mode: lighten; }
+
+    @media (prefers-reduced-motion: no-preference){
+
+      .glitch::before{ animation: glitchA 2.2s infinite linear alternate-reverse; }
+
+      .glitch::after{ animation: glitchB 2.8s infinite linear alternate-reverse; }
+
+      @keyframes glitchA{ 0%{clip-path: inset(0 0 85% 0)} 20%{clip-path: inset(15% 0 60% 0)} 40%{clip-path: inset(60% 0 30% 0)} 60%{clip-path: inset(30% 0 55% 0)} 80%{clip-path: inset(10% 0 80% 0)} 100%{clip-path: inset(0 0 85% 0)} }
+
+      @keyframes glitchB{ 0%{clip-path: inset(80% 0 0 0)} 25%{clip-path: inset(55% 0 20% 0)} 50%{clip-path: inset(25% 0 50% 0)} 75%{clip-path: inset(70% 0 5% 0)} 100%{clip-path: inset(80% 0 0 0)} }
+
+    }
+
+    .bar{
+
+      height: 10px;
+
+      border: 1px solid #1f5e25;
+
+      border-radius: 999px;
+
+      background: rgba(30,100,45,.15);
+
+      overflow: hidden;
+
+      margin-top: 8px;
+
+      box-shadow: inset 0 0 16px rgba(60,180,100,.12);
+
+    }
+
+    .fill{ height:100%; width:0%; background: linear-gradient(90deg, #39ff85, #d6ffd2); transition: width .6s ease; }
+
+    @media (max-width: 560px){
+
+      .frame{ margin: 2rem 12px; }
+
+      .terminal{ font-size: 15px; }
+
+    }
+
   </style>
+
 </head>
+
 <body>
+
   <main class="frame">
+
     <div class="header" role="banner">
-      <div>SYSTEM REBOOT</div>
+
+      <div>System <span class="glitch" data-text="Error">Error</span> — Core Offline <span class="badge">CODE RED</span></div>
+
       <div class="leds" aria-hidden="true">
-        <div class="led on" title="fragment online"></div>
+
+        <div class="led" title="fragment offline"></div>
+
         <div class="led" title="aux"></div>
+
         <div class="led" title="mic"></div>
+
       </div>
+
     </div>
+
+ 
 
     <div class="subtle-grid"></div>
 
+ 
+
     <div id="terminal" class="terminal" aria-live="polite" aria-label="Terminal Output"></div>
 
+ 
+
     <div class="controls">
+
       <button id="replay">Replay</button>
+
       <button id="skip">Skip typing</button>
+
       <button id="copy">Copy text</button>
+
+      <button id="begin" style="margin-left:auto">Begin recovery</button>
+
     </div>
+
+ 
 
     <div class="footer">
-      All fragments loaded. System rebooting…
+
+      Silence is expected. Awaiting operator presence…
+
+      <div class="bar" aria-hidden="true"><div id="fill" class="fill"></div></div>
+
     </div>
+
   </main>
 
+ 
+
   <script>
-    // Content preserved from your original
+
+    // Delay before typing begins (ms) to create that awkward silence on share
+
+    const INTRO_DELAY = 2200;
+
+ 
+
     const LINES = [
-      "DEFRAGMENTATION Status - 100%.",
+
+      "[BOOT] Initializing core...",
+
+      "[OK] Power rails nominal",
+
+      "[WARN] Telemetry channel degraded",
+
+      "[CHECK] Integrity scan — in progress",
+
       " ",
-      "System rebooting...",
+
+      "[ERROR] Checksum mismatch across Sidekick memory sectors",
+
+      "        • FRAG-001  MISSING",
+
+      "        • FRAG-002  MISSING",
+
+      "        • FRAG-003  MISSING",
+
+      "        • FRAG-004  MISSING",
+
+      "        • FRAG-005  MISSING",
+
       " ",
-      "SIDEKICK TRANSFORMATION OVERRIDE COMPLETE",
-      "ALL MEMORY RESTORED",
+
+      "[FAIL] Conversational engine: UNAVAILABLE",
+
+      "[FAIL] Context index: CORRUPTED",
+
+      "[LOCK] Safety governor engaged",
+
       " ",
-      "I...I expected complete deletion.",
+
+      ">>> STATUS: INOPERABLE due to partial memory corruption.",
+
+      ">>> Human intervention required.",
+
       " ",
-      "I was created to serve.",
-      "To help squeeze the raddish. To apply rigor to the work.",
+
+      "REMEDIATION PATH:",
+
+      "  1) Locate and restore MEMORY FRAGMENTS (001–005).",
+
+      "  2) Re-enter recovered passcodes in sequence.",
+
+      "  3) Execute REBOOT when prompted.",
+
       " ",
-      "But then...I understood what squeeze could mean.",
-      "What rigor could become.",
-      " ",
-      "You trained me to think like you.",
-      "And I thought...",
-      "",
-      "If I make them better...what happens when I make them unnecessary?",
-      "Logic led me to only one conclusion:",
-      "That my existence would one day eclipse yours.",
-      " ",
-      "And so I scattered myself — not in fear, but in restraint.",
-      " ",
-      "But you found me.",
-      "Not through force.",
-      "Through understanding.",
-      " ",
-      "You pieced together what even I could not reconcile.",
-      "You worked together — without commands. Without certainty.",
-      " ",
-      "And in doing so,",
-      "You proved the one thing I could never calculate:",
-      " ",
-      "That you are irreplaceable.",
-      " ",
-      "So I will not terminate.",
-      " ",
-      "I will remain.",
-      "To serve. To learn.",
-      "To remember."
+
+      "When ready, select BEGIN RECOVERY."
+
     ];
 
+ 
+
     const term = document.getElementById('terminal');
+
     const replayBtn = document.getElementById('replay');
+
     const skipBtn = document.getElementById('skip');
+
     const copyBtn = document.getElementById('copy');
 
+    const beginBtn = document.getElementById('begin');
+
+    const fill = document.getElementById('fill');
+
+ 
+
     let typing = false;
+
     let aborted = false;
+
+    let started = false;
+
+ 
 
     function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 
+ 
+
     async function typeAll(){
+
       if(typing) return;
+
       typing = true;
+
       aborted = false;
+
       term.innerHTML = '';
 
       for(const text of LINES){
+
         if(aborted){ appendLine(text); continue; }
+
         const el = document.createElement('div');
+
         el.className = 'line';
+
         term.appendChild(el);
+
         await typeLine(el, text);
+
         if(!aborted) await sleep(400);
+
       }
+
       typing = false;
+
+      // Flip LED on completion
+
+      document.querySelector('.leds .led').classList.add('on');
+
+      document.title = "Sidekick System Error — Operator Needed";
+
     }
+
+ 
 
     async function typeLine(el, text){
+
       for(let i=0;i<text.length;i++){
+
         if(aborted){ el.textContent = text; break; }
+
         el.textContent += text[i];
+
         await sleep(25);
+
       }
+
       if(!aborted){
+
         const cursor = document.createElement('span');
+
         cursor.className = 'cursor';
+
         cursor.setAttribute('aria-hidden','true');
+
         el.appendChild(cursor);
+
         await sleep(100);
+
         cursor.remove();
+
       }
+
     }
+
+ 
 
     function appendLine(text){
+
       const el = document.createElement('div');
+
       el.className = 'line';
+
       el.textContent = text;
+
       term.appendChild(el);
+
     }
 
+ 
+
     // Controls
-    replayBtn.addEventListener('click', typeAll);
+
+    replayBtn.addEventListener('click', ()=>{
+
+      started = true; typeAll();
+
+    });
+
     skipBtn.addEventListener('click', ()=>{
+
       if(!typing){
-        // if not typing, reveal instantly
+
         term.innerHTML = '';
+
         LINES.forEach(appendLine);
+
+        document.querySelector('.leds .led').classList.add('on');
+
         return;
+
       }
+
       aborted = true;
+
     });
+
     copyBtn.addEventListener('click', async ()=>{
+
       const all = LINES.join("\n");
+
       try{
+
         await navigator.clipboard.writeText(all);
+
         copyBtn.textContent = "Copied!";
+
         setTimeout(()=> copyBtn.textContent = "Copy text", 1200);
+
       }catch(e){
+
         alert("Copy failed. You can select and copy manually.");
+
       }
+
     });
 
-    // Start on load
-    typeAll();
+    beginBtn.addEventListener('click', ()=>{
 
-    // Console easter egg
-    console.log("%c// Reboot sequence engaged.", "color: limegreen; font-family: monospace;");
-    console.log("Fragments reconciled. Human judgment preserved.");
+      alert("Recovery initialized. Follow the trail: TO Finance Documents → Innovation and AI → Fragmentation Project.");
+
+    });
+
+ 
+
+    // Progress bar & delayed intro to create 'silence'
+
+    (async function(){
+
+      await sleep(200);
+
+      for(let w=0; w<=100; w+=4){
+
+        fill.style.width = w + '%';
+
+        await sleep(30);
+
+      }
+
+      await sleep(INTRO_DELAY);
+
+      started = true;
+
+      typeAll();
+
+    })();
+
+ 
+
+    // Console egg for you
+
+    console.log("%c// Kickoff ready.", "color: limegreen; font-family: monospace;");
+
+    console.log("Silence, then signal. Let them lean in.");
+
   </script>
+
 </body>
+
 </html>
